@@ -107,6 +107,24 @@ class MassageBookingTest extends TestCase
         $this->actingAs(User::factory()->create())->get(route('bookings.mine'))->assertOk()->assertDontSee($booking->booking_code);
     }
 
+    public function test_homepage_available_slot_link_prefills_the_booking_form(): void
+    {
+        $user = User::factory()->create();
+        $service = $this->service();
+        $date = today()->addDays(4)->toDateString();
+
+        $this->actingAs($user)
+            ->get(route('booking.create', [
+                'service' => $service->id,
+                'date' => $date,
+                'time' => '14:00',
+            ]))
+            ->assertOk()
+            ->assertSee('value="'.$service->id.'"', false)
+            ->assertSee('value="'.$date.'"', false)
+            ->assertSee('value="14:00" checked', false);
+    }
+
     public function test_same_time_and_overlapping_treatment_durations_are_rejected(): void
     {
         $user = User::factory()->create();
