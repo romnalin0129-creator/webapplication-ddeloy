@@ -1,0 +1,46 @@
+<?php
+
+return [
+    'accepted' => 'ต้องยอมรับ :attribute',
+    'confirmed' => ':attribute ยืนยันไม่ตรงกัน',
+    'current_password' => 'รหัสผ่านไม่ถูกต้อง',
+    'email' => ':attribute ต้องเป็นที่อยู่อีเมลที่ถูกต้อง',
+    'max' => [
+        'string' => ':attribute ต้องมีความยาวไม่เกิน :max ตัวอักษร',
+    ],
+    'min' => [
+        'string' => ':attribute ต้องมีความยาวอย่างน้อย :min ตัวอักษร',
+    ],
+    'required' => 'กรุณากรอก:attribute',
+    'string' => ':attribute ต้องเป็นข้อความ',
+    'unique' => ':attribute นี้ถูกใช้งานแล้ว',
+    'date' => ':attribute ต้องเป็นวันที่ที่ถูกต้อง',
+    'date_format' => ':attribute รูปแบบวันที่ไม่ถูกต้อง',
+    'after' => ':attribute ต้องเป็นวันที่หลังจาก :date',
+    'after_or_equal' => ':attribute ต้องเป็นวันที่ตั้งแต่ :date เป็นต้นไป',
+    'numeric' => ':attribute ต้องเป็นตัวเลข',
+    'integer' => ':attribute ต้องเป็นจำนวนเต็ม',
+    'in' => 'ค่าของ:attributeไม่ถูกต้อง',
+    'required_if' => 'กรุณากรอก:attribute',
+    'array' => ':attribute ต้องเป็นรายการข้อมูล',
+    'image' => ':attribute ต้องเป็นไฟล์รูปภาพ',
+
+    'attributes' => [
+        'current_password' => 'รหัสผ่านปัจจุบัน',
+        'customer_name' => 'ชื่อ-นามสกุล',
+        'description' => 'รายละเอียดงาน',
+        'pickup_date' => 'วันรับกล้อง',
+        'return_date' => 'วันคืนกล้อง',
+        'pickup_method' => 'วิธีรับสินค้า',
+        'shipping_address' => 'ที่อยู่จัดส่ง',
+        'phone' => 'เบอร์โทรศัพท์',
+        'color' => 'สีของกล้อง',
+        'quantity' => 'จำนวนกล้อง',
+        'email' => 'อีเมล',
+        'name' => 'ชื่อ',
+        'password' => 'รหัสผ่าน',
+        'password_confirmation' => 'ยืนยันรหัสผ่าน',
+        'status' => 'สถานะ',
+        'title' => 'ชื่องาน',
+    ],
+];

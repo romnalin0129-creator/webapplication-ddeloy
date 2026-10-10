@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="th">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="csrf-token" content="{{ csrf_token() }}">
+
+        <title>
+            @if (request()->routeIs('login'))
+                Relax Massage &amp; Spa — เข้าสู่ระบบ
+            @elseif (request()->routeIs('register'))
+                Relax Massage &amp; Spa — สมัครสมาชิก
+            @elseif (request()->routeIs('password.request'))
+                Relax Massage &amp; Spa — ลืมรหัสผ่าน
+            @elseif (request()->routeIs('password.reset'))
+                Relax Massage &amp; Spa — ตั้งรหัสผ่านใหม่
+            @else
+                Relax Massage &amp; Spa — บัญชีผู้ใช้
+            @endif
+        </title>
+
+        <!-- Fonts -->
+        <link rel="preconnect" href="https://fonts.bunny.net">
+        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+
+        <!-- Scripts -->
+        @php
+            $cssPath = mix('/css/app.css').'?v='.filemtime(public_path('css/app.css'));
+            $jsPath = mix('/js/app.js');
+        @endphp
+        <link rel="stylesheet" href="{{ $cssPath }}">
+        <script src="{{ $jsPath }}" defer></script>
+    </head>
+    <body class="bg-rose-50">
+        <div class="font-sans text-gray-900 antialiased">
+            {{ $slot }}
+        </div>
+    </body>
+</html>
