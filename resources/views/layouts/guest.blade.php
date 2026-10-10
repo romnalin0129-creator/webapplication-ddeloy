@@ -6,7 +6,7 @@
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
         <title>
-            @if (request()->routeIs('login'))
+            @if (request()->routeIs('login', 'welcome'))
                 Relax Massage &amp; Spa — เข้าสู่ระบบ
             @elseif (request()->routeIs('register'))
                 Relax Massage &amp; Spa — สมัครสมาชิก

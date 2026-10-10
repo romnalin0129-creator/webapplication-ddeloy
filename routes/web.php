@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return auth()->check()
         ? redirect()->route('home')
-        : redirect()->route('login');
+        : view('auth.login');
 })->name('welcome');
 Route::get('/home', [StorefrontController::class, 'index'])->name('home');
 Route::get('/booking/availability', [AppointmentBookingController::class, 'availability'])->name('booking.availability');

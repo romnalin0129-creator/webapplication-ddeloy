@@ -21,9 +21,13 @@ class AuthenticationTest extends TestCase
             ->assertSee('Relax Massage');
     }
 
-    public function test_root_entry_opens_login_for_guests_and_storefront_for_members(): void
+    public function test_root_entry_renders_login_for_guests_and_storefront_for_members(): void
     {
-        $this->get('/')->assertRedirect(route('login'));
+        $this->get('/')
+            ->assertOk()
+            ->assertSee('เข้าสู่ระบบ')
+            ->assertSee(route('register'))
+            ->assertSee(route('password.request'));
 
         $this->actingAs(User::factory()->create())
             ->get('/')
