@@ -37,6 +37,7 @@
                 <div class="history-detail">
                     <span class="eyebrow">BOOKING {{ $booking->booking_code }}</span>
                     <h2>{{ $booking->service?->name ?? 'บริการที่ยกเลิกแล้ว' }}</h2>
+                    <p class="history-customer">ชื่อผู้จอง: <strong>{{ $booking->customer_name ?: ($booking->user?->name ?? 'ไม่ระบุชื่อ') }}</strong></p>
                     <p>{{ $booking->booking_date->format('d/m/Y') }} &nbsp;·&nbsp; {{ substr($booking->booking_time, 0, 5) }} น. &nbsp;·&nbsp; {{ $booking->duration_minutes }} นาที</p>
                     <span class="status-pill status-{{ $booking->status }}">{{ ['pending' => 'รอยืนยัน', 'confirmed' => 'ยืนยันแล้ว', 'cancelled' => 'ยกเลิก', 'completed' => 'เสร็จสิ้น'][$booking->status] }}</span>
                 </div>

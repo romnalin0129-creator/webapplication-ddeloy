@@ -5,6 +5,7 @@
         </x-slot>
 
         <div class="mb-6">
+            <span class="auth-eyebrow">YOUR PRIVATE MOMENT</span>
             <h1 class="text-2xl font-bold text-gray-900">เข้าสู่ระบบ</h1>
             <p class="mt-2 text-sm text-gray-600">เข้าสู่ระบบเพื่อจองคิวและดูประวัติการนัดหมายของคุณ</p>
         </div>

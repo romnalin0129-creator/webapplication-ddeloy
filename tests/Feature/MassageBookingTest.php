@@ -103,6 +103,8 @@ class MassageBookingTest extends TestCase
             ->assertOk()
             ->assertSee($booking->booking_code)
             ->assertSee('นวดแผนไทย')
+            ->assertSee('ชื่อผู้จอง:')
+            ->assertSee('ลูกค้าทดสอบ')
             ->assertSee(route('bookings.edit', $booking));
         $this->actingAs(User::factory()->create())->get(route('bookings.mine'))->assertOk()->assertDontSee($booking->booking_code);
     }

@@ -4,6 +4,7 @@
 
 ## ความสามารถหลัก
 
+- เข้าเว็บไซต์ที่ `/` จะเริ่มที่หน้า Login และสมัครสมาชิกได้จากลิงก์ในหน้านั้น; หน้าแนะนำร้านเปิดได้ที่ `/home`
 - หน้าแรกแสดงบริการจากฐานข้อมูล พร้อมข้อมูลราคา ระยะเวลา รายละเอียด และรูปภาพ
 - ระบบสมาชิก Laravel Jetstream/Fortify: สมัครสมาชิก เข้าสู่ระบบ ออกจากระบบ และรีเซ็ตรหัสผ่าน
 - ลูกค้าต้องเข้าสู่ระบบก่อนจองคิว และเห็น/ยกเลิกได้เฉพาะการจองของตนเองที่ยังรอยืนยัน
@@ -106,18 +107,18 @@ php artisan test
 
 1. สร้าง repository ว่างชื่อ `relax-massage-spa` บน GitHub
 2. ตรวจสอบ `.gitignore` ก่อน `git add`; ไฟล์ `.env`, `vendor`, `node_modules`, log และ cache ถูกยกเว้น
-3. ใช้ PowerShell จากโฟลเดอร์โปรเจกต์ แล้วเปลี่ยน `<บัญชี-GitHub>` ให้เป็นบัญชีของตน:
+3. ใช้ PowerShell จากโฟลเดอร์โปรเจกต์นี้ (มี Git repository และ commit เริ่มต้นไว้แล้ว) เปลี่ยน `<บัญชี-GitHub>` ให้เป็นบัญชีของตน:
 
    ```powershell
    cd C:\laragon\www\webappplication
-   git init
    git add .
    git status
-   git commit -m "Build Relax Massage booking application"
    git branch -M main
    git remote add origin https://github.com/<บัญชี-GitHub>/relax-massage-spa.git
    git push -u origin main
    ```
+
+   หากเคยตั้ง remote `origin` แล้ว ให้ใช้ `git remote set-url origin https://github.com/<บัญชี-GitHub>/relax-massage-spa.git` แทน `git remote add`
 
 4. ตรวจหน้า repository ว่ามี `README.md`, `composer.json`, `composer.lock`, `routes`, `app`, `database/migrations`, `database/seeders` และ `resources/views` ครบ และไม่มี `.env`
 5. แนะนำให้แยก commit งานต่อยอด เช่น `Add Relax Massage storefront`, `Add appointment booking and slot validation`, `Add service CRUD and admin dashboard`

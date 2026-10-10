@@ -22,6 +22,9 @@
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Noto+Sans+Thai:wght@300;400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
 
         <!-- Scripts -->
         @php
@@ -29,9 +32,10 @@
             $jsPath = mix('/js/app.js');
         @endphp
         <link rel="stylesheet" href="{{ $cssPath }}">
+        <link rel="stylesheet" href="{{ asset('css/auth.css').'?v='.filemtime(public_path('css/auth.css')) }}">
         <script src="{{ $jsPath }}" defer></script>
     </head>
-    <body class="bg-rose-50">
+    <body class="auth-body">
         <div class="font-sans text-gray-900 antialiased">
             {{ $slot }}
         </div>

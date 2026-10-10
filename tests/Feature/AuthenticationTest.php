@@ -21,6 +21,15 @@ class AuthenticationTest extends TestCase
             ->assertSee('Relax Massage');
     }
 
+    public function test_root_entry_opens_login_for_guests_and_storefront_for_members(): void
+    {
+        $this->get('/')->assertRedirect(route('login'));
+
+        $this->actingAs(User::factory()->create())
+            ->get('/')
+            ->assertRedirect(route('home'));
+    }
+
     public function test_users_can_authenticate_using_the_login_screen(): void
     {
         $user = User::factory()->create();

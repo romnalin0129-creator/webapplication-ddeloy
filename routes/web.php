@@ -6,7 +6,12 @@ use App\Http\Controllers\MassageServiceController;
 use App\Http\Controllers\StorefrontController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', [StorefrontController::class, 'index'])->name('home');
+Route::get('/', function () {
+    return auth()->check()
+        ? redirect()->route('home')
+        : redirect()->route('login');
+})->name('welcome');
+Route::get('/home', [StorefrontController::class, 'index'])->name('home');
 Route::get('/booking/availability', [AppointmentBookingController::class, 'availability'])->name('booking.availability');
 Route::get('/booking', [AppointmentBookingController::class, 'create'])
     ->middleware('auth')->name('booking.create');
