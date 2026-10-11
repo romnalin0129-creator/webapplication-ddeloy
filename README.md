@@ -123,3 +123,5 @@ php artisan test
 5. แนะนำให้แยก commit งานต่อยอด เช่น `Add Kawaii Corner storefront`, `Add digital product checkout`, `Add admin catalog management`
 
 ใน workspace นี้ไม่ได้สร้าง GitHub repository หรือ push โค้ด เพราะยังไม่มี URL/บัญชี GitHub ที่ผู้ใช้ระบุ
+#   w e b a p p l i c a t i o n  
+ 
