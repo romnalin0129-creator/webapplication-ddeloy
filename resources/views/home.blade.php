@@ -1,93 +1,128 @@
-<!doctype html>
-<html lang="th">
-<head>
-    <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Relax Massage & Spa นวดผ่อนคลาย จองคิวออนไลน์ได้ง่าย ๆ">
-    <title>Relax Massage &amp; Spa | ให้ทุกช่วงเวลาเป็นการพักผ่อน</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Noto+Sans+Thai:wght@300;400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{{ asset('css/relax.css') }}">
-</head>
-<body>
-<header class="topbar">
-    <a class="logo" href="{{ route('home') }}"><span class="logo-symbol">R</span><span>RELAX<small>MASSAGE &amp; SPA</small></span></a>
-    <button class="menu-toggle" type="button" aria-label="เปิดเมนู">☰</button>
-    <nav class="navigation"><a href="{{ route('home') }}">หน้าแรก</a><a href="#services">บริการ</a><a href="#about">เกี่ยวกับเรา</a><a href="#contact">ติดต่อเรา</a>
-        @auth
-            <a href="{{ route('bookings.mine') }}">ประวัติการจอง</a>
-            <form class="mobile-logout" method="POST" action="{{ route('logout') }}">@csrf<button type="submit">ออกจากระบบ</button></form>
-        @else
-            <a href="{{ route('login') }}">เข้าสู่ระบบ</a>
-            <a href="{{ route('register') }}">สมัครสมาชิก</a>
-            <a href="{{ route('password.request') }}">ลืมรหัสผ่าน?</a>
-        @endauth
-        @if(auth()->check() && auth()->user()->is_admin)<a href="{{ route('dashboard') }}" class="admin-nav">จัดการร้าน</a>@endif
-    </nav>
-    <div class="nav-cta">@auth<form method="POST" action="{{ route('logout') }}">@csrf<button type="submit" class="nav-login">ออกจากระบบ</button></form>@endauth<a class="button button-gold" href="{{ route('booking.create') }}">จองคิวเลย <span>↗</span></a></div>
-</header>
-<main>
-    @if(session('success'))<div class="notice notice-success">{{ session('success') }}</div>@endif
-    @if(session('error'))<div class="notice notice-error">{{ session('error') }}</div>@endif
-    @if($errors->any())<div class="notice notice-error">{{ $errors->first() }}</div>@endif
-    <section class="hero">
-        <img class="hero-photo" src="https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=2200&q=90" alt="บรรยากาศสปาแสนสงบ">
-        <div class="hero-overlay"></div><div class="hero-copy"><span class="eyebrow light">A MOMENT JUST FOR YOU</span><h1>ผ่อนคลายทุกสัมผัส<br>เติมเต็มช่วงเวลา<br><em>แห่งการพักผ่อน</em></h1><p>ปล่อยวางความเหนื่อยล้า แล้วกลับมาใส่ใจตัวเองอีกครั้ง<br>ด้วยศาสตร์การนวดและการดูแลที่เราตั้งใจคัดสรร</p><a class="button button-gold" href="{{ route('booking.create') }}">จองคิวเลย <span>↗</span></a><div class="hero-caption"><span></span> YOUR SANCTUARY IN THE CITY</div></div>
-        <div class="hero-side-note">SLOW DOWN · BREATHE · REST</div>
-    </section>
-    <section class="availability-section section-wrap" id="available-times">
-        <div class="availability-intro">
-            <span class="eyebrow">LIVE APPOINTMENT FINDER</span>
-            <h2>ค้นหารอบว่างของคุณ</h2>
-            <p>เลือกรายการและวันที่ ระบบจะตรวจสอบคิวจริงให้ทันที</p>
+@extends('layouts.storefront')
+
+@section('title', 'Kawaii Corner | เมโลดี้ ธีม และสติกเกอร์ LINE')
+@section('description', 'ช้อปเมโลดี้ ธีม และสติกเกอร์ LINE สุดน่ารัก เติมความสดใสให้ทุกแชต')
+
+@section('content')
+    <section class="shop-hero" id="home">
+        <div class="hero-sparkle sparkle-one">✦</div>
+        <div class="hero-sparkle sparkle-two">✧</div>
+        <div class="hero-copy">
+            <span class="hero-kicker"><i></i> A LITTLE WORLD OF CUTENESS ♡ </span>
+            <h1>เติมความน่ารัก<br> ให้ทุกแชต <em>เป็นวันพิเศษ ✨</em></h1>
+            <p>ค้นพบธีม LINE เมโลดี้สุดละมุน และสติกเกอร์สุดคิวต์<br>ที่จะทำให้ทุกข้อความของคุณเต็มไปด้วยความสุข ♡</p>
+            <a class="shop-button shop-button-primary" href="#products">เลือกช้อปเลย <span>↗</span></a>
+            <div class="hero-proof"><span class="proof-avatars"><i>🐻</i><i>🐈</i><i>🐰</i></span><span>ของน่ารักที่ทำให้ทุกวันใจฟู</span></div>
         </div>
-        <form id="home-availability" class="availability-search" method="GET" action="{{ route('booking.create') }}" data-availability-url="{{ route('booking.availability') }}">
-            <label>
-                <span>บริการที่สนใจ</span>
-                <select name="service_id" required>
-                    <option value="">เลือกบริการ</option>
-                    @foreach($services as $service)
-                        <option value="{{ $service->id }}">{{ $service->name }} · {{ $service->duration_minutes }} นาที · ฿{{ number_format($service->price) }}</option>
-                    @endforeach
+        <div class="hero-art" aria-label="ภาพตัวอย่างสินค้าน่ารัก">
+            <div class="hero-blob"></div>
+            <div class="art-sun">🥐</div>
+            <div class="art-cloud">🥨</div>
+            <div class="art-card art-card-main"><span> เชฟจิ๋วชวนฝัน</span><b>👩🏻‍🍳 </b><small>แต่งหน้าจอให้หวานละมุน </small></div>
+            <div class="art-card art-card-note"><b>🍔</b><span> เบอร์เกอร์คำโต </span></div>
+            <div class="art-sticker sticker-bunny">🍟</div>
+            <div class="art-sticker sticker-heart">🥙 </div>
+            <div class="art-star star-a">✦</div><div class="art-star star-b">✧</div>
+        </div>
+        <a class="hero-scroll" href="#categories"><span></span> เลื่อนลงเพื่อค้นพบ</a>
+    </section>
+
+    <section class="category-section" id="categories">
+        <div class="section-heading">
+            <span class="section-kicker">PICK YOUR HAPPY</span>
+            <h2>วันนี้อยากเติมความน่ารักแบบไหน?</h2>
+            <p>เลือกไอเทมชิ้นโปรด แล้วมาเปลี่ยนวันธรรมดาให้พิเศษกว่าเดิม ด้วยเมโลดี้ ธีม และสติกเกอร์สุดคิวต์ ♡</p>
+        </div>
+        <div class="category-grid">
+            @foreach($categories as $key => $category)
+                <a class="category-card category-{{ $key }}" href="#products" data-category-link="{{ $key }}">
+                    <span class="category-icon">{{ $category['icon'] }}</span>
+                    <span class="category-copy"><strong>{{ $category['name'] }}</strong><small>{{ $category['description'] }}</small></span>
+                    <span class="category-arrow">↗</span>
+                </a>
+            @endforeach
+        </div>
+    </section>
+
+    <section class="bestseller-section">
+        <div class="bestseller-inner">
+            <div><span class="section-kicker">LOVED BY EVERYONE</span><h2>คอลเลกชันสุดคิ้วต์ที่ต้องมี <span>♡</span></h2><p>รวมไอเทมสุดโปรดที่คัดมาเพื่อคนรักความน่ารักโดยเฉพาะ เลือกชิ้นที่ใช่ แล้วเติมความสุขให้ทุกวันของคุณ ✨</p></div>
+            <button class="text-link" type="button" data-filter-link="bestseller">ดูสินค้าขายดี <span>↗</span></button>
+        </div>
+        <div class="bestseller-chips" aria-label="สินค้าแนะนำ">
+            @foreach($products->where('bestseller', true)->take(4) as $product)
+                <span>{{ $product['icon'] }} {{ $product['name'] }}</span>
+            @endforeach
+        </div>
+    </section>
+
+    <section class="catalog-section" id="products">
+        <div class="catalog-heading">
+            <div><span class="section-kicker">THE KAWAII COLLECTION</span><h2>สินค้าแสนน่ารัก <span class="catalog-total">{{ count($products) }} ชิ้น</span></h2></div>
+            <label class="sort-control">เรียงตาม
+                <select id="product-sort" aria-label="เรียงสินค้าตามราคา">
+                    <option value="recommended">แนะนำ</option>
+                    <option value="price-asc">ราคาน้อยไปมาก</option>
+                    <option value="price-desc">ราคามากไปน้อย</option>
+                    <option value="name">ชื่อสินค้า</option>
                 </select>
             </label>
-            <label>
-                <span>วันที่ต้องการ</span>
-                <input type="date" name="date" min="{{ today()->toDateString() }}" value="{{ today()->toDateString() }}" required>
-            </label>
-            <button class="button button-gold" type="submit">ตรวจสอบรอบว่าง <span>↗</span></button>
-        </form>
-        <p id="home-availability-message" class="availability-message" aria-live="polite">เลือกรายการและวันที่ แล้วกดตรวจสอบรอบว่าง</p>
-        <div id="home-availability-results" class="home-time-results" aria-live="polite"></div>
-    </section>
-    <section class="intro section-wrap" id="about"><div class="intro-mark">R<span>.</span></div><div><span class="eyebrow">WELCOME TO RELAX</span><h2>ที่พักใจในวันที่โลกหมุนเร็ว</h2></div><p>เราสร้างพื้นที่สงบ อบอุ่น และเป็นส่วนตัว เพื่อให้ทุกการมาเยือนเป็นช่วงเวลาที่คุณได้หยุดพักอย่างแท้จริง ดูแลโดยนักบำบัดผู้เชี่ยวชาญ พร้อมผลิตภัณฑ์คุณภาพที่คัดสรรเพื่อผิวและความรู้สึกของคุณ</p></section>
-    <section class="services-section" id="services"><div class="section-wrap"><div class="section-title"><div><span class="eyebrow">OUR TREATMENTS</span><h2>ศาสตร์แห่งการผ่อนคลาย</h2><p>เลือกการดูแลที่เหมาะกับช่วงเวลาของคุณ</p></div><a class="subtle-link" href="{{ route('booking.create') }}">ดูรอบว่าง <span>↗</span></a></div>
-        <div class="service-grid">
-        @forelse($services as $service)
-            <article class="service-card"><a href="{{ route('booking.create', ['service' => $service->id]) }}" class="service-image">@if($service->image_path)<img src="{{ str_starts_with($service->image_path, 'http') ? $service->image_path : \Illuminate\Support\Facades\Storage::url($service->image_path) }}" alt="{{ $service->name }}">@else<div class="image-placeholder">RELAX</div>@endif<span class="duration-tag">{{ $service->duration_minutes }} นาที</span></a><div class="service-info"><span class="service-number">{{ str_pad((string) $loop->iteration, 2, '0', STR_PAD_LEFT) }} &nbsp; TREATMENT</span><h3>{{ $service->name }}</h3><p>{{ $service->description }}</p><div class="service-footer"><strong>฿{{ number_format($service->price) }} <small>/ ท่าน</small></strong><a class="text-book" href="{{ route('booking.create', ['service' => $service->id]) }}">จองบริการ <span>↗</span></a></div></div></article>
-        @empty<div class="empty-services">กำลังเตรียมบริการพิเศษสำหรับคุณ กรุณากลับมาเยี่ยมชมอีกครั้ง</div>@endforelse
         </div>
-    </div></section>
-    <section class="ritual-section"><div class="ritual-image"><img src="https://images.unsplash.com/photo-1600334129128-685c5582fd35?auto=format&fit=crop&w=1200&q=85" alt="การดูแลอย่างพิถีพิถัน"></div><div class="ritual-copy"><span class="eyebrow">THE RELAX RITUAL</span><h2>เพราะการพักผ่อน<br>ควรเป็นเรื่องพิเศษ</h2><p>ตั้งแต่กลิ่นหอมอ่อน ๆ แสงอบอุ่น ไปจนถึงสัมผัสที่พอดี ทุกองค์ประกอบถูกออกแบบมาเพื่อให้คุณรู้สึกผ่อนคลายอย่างเป็นธรรมชาติ</p><div class="feature-list"><div><span>✦</span><p><strong>ใส่ใจทุกรายละเอียด</strong><small>ดูแลโดยนักบำบัดที่ผ่านการฝึกฝน</small></p></div><div><span>✦</span><p><strong>พื้นที่สงบเป็นส่วนตัว</strong><small>สะอาด ปลอดภัย และได้มาตรฐาน</small></p></div><div><span>✦</span><p><strong>จองคิวง่าย ไม่ต้องรอนาน</strong><small>เลือกรอบว่างและจัดการการจองออนไลน์</small></p></div></div><a class="button button-outline" href="#available-times">ค้นหาช่วงเวลาของคุณ <span>↗</span></a></div></section>
-    <section class="booking-steps section-wrap">
-        <div class="section-title"><div><span class="eyebrow">A SIMPLE RITUAL</span><h2>จองง่ายใน 3 ขั้นตอน</h2><p>เตรียมช่วงเวลาพักผ่อนของคุณได้ในไม่กี่คลิก</p></div></div>
-        <div class="step-grid">
-            <article><span class="step-number">01</span><h3>เลือกบริการ</h3><p>เลือกทรีตเมนต์ที่เหมาะกับความต้องการ พร้อมดูราคาและระยะเวลาได้ทันที</p></article>
-            <article><span class="step-number">02</span><h3>เลือกรอบที่ว่าง</h3><p>ตรวจสอบตารางคิวจริงตามวันและเวลาที่คุณสะดวก</p></article>
-            <article><span class="step-number">03</span><h3>ยืนยันการจอง</h3><p>เข้าสู่ระบบเพื่อส่งคำขอ แล้วติดตามหรือแก้ไขคิวได้จากประวัติการจอง</p></article>
-        </div>
-    </section>
-    <section class="faq-section">
-        <div class="section-wrap faq-layout">
-            <div><span class="eyebrow">GOOD TO KNOW</span><h2>คำถามที่พบบ่อย</h2><p>ข้อมูลสั้น ๆ เพื่อให้คุณเตรียมตัวก่อนมาพักผ่อน</p><a class="subtle-link" href="#contact">สอบถามเพิ่มเติม ↗</a></div>
-            <div class="faq-list">
-                <details><summary>ต้องเข้าสู่ระบบก่อนจองหรือไม่?</summary><p>สามารถดูบริการและตรวจสอบรอบว่างได้โดยไม่ต้องเข้าสู่ระบบ แต่ต้องเข้าสู่ระบบก่อนยืนยันการจอง</p></details>
-                <details><summary>จะทราบได้อย่างไรว่าจองสำเร็จ?</summary><p>ระบบจะแสดงเลขที่การจอง และรายการจะแสดงในหน้า “ประวัติการจอง” พร้อมสถานะรอยืนยัน</p></details>
-                <details><summary>ถ้าต้องการเปลี่ยนวันหรือเวลา ทำอย่างไร?</summary><p>แก้ไขหรือยกเลิกรายการได้จากประวัติการจอง ตราบใดที่รายการยังรอยืนยันจากทางร้าน</p></details>
+        <div class="catalog-tools">
+            <div class="filter-tabs" role="group" aria-label="กรองตามหมวดหมู่">
+                <button class="filter-tab is-active" type="button" data-filter="all">ทั้งหมด <span>{{ count($products) }}</span></button>
+                @foreach($categories as $key => $category)
+                    <button class="filter-tab" type="button" data-filter="{{ $key }}">{{ $category['icon'] }} {{ $category['name'] }}</button>
+                @endforeach
+                <button class="filter-tab" type="button" data-filter="bestseller">⭐ ขายดี</button>
             </div>
+            <label class="product-search"><span aria-hidden="true">⌕</span><input id="product-search" type="search" placeholder="ค้นหาสินค้าน่ารัก..." autocomplete="off"><kbd>/</kbd></label>
         </div>
+        <div class="product-grid" id="product-grid">
+            @foreach($products as $product)
+                <article class="product-card" data-product-card data-id="{{ $product['id'] }}" data-name="{{ $product['name'] }}" data-category="{{ $product['category'] }}" data-price="{{ $product['price'] }}" data-bestseller="{{ $product['bestseller'] ? '1' : '0' }}" data-product='@json($product)'>
+                    <div class="product-art art-{{ $product['color'] }}">
+                        @if($product['bestseller'])<span class="product-ribbon">ฮิตติดใจ ✨</span>@endif
+                        <span class="product-art-sparkle sparkle-left">✦</span><span class="product-art-sparkle sparkle-right">✧</span>
+                        <span class="product-emoji">{{ $product['icon'] }}</span>
+                        <span class="product-art-caption">{{ $product['tag'] }}</span>
+                        <button class="quick-add" type="button" data-add="{{ $product['id'] }}" aria-label="เพิ่ม{{ $product['name'] }}ลงตะกร้า">+</button>
+                    </div>
+                    <div class="product-info">
+                        <span class="product-category">{{ $categories[$product['category']]['name'] }}</span>
+                        <h3>{{ $product['name'] }}</h3>
+                        <p>{{ $product['description'] }}</p>
+                        <div class="product-card-bottom"><strong>฿{{ number_format($product['price']) }}</strong><button type="button" class="add-button" data-add="{{ $product['id'] }}">เพิ่มใส่ตะกร้า <span>+</span></button></div>
+                    </div>
+                </article>
+            @endforeach
+        </div>
+        <p class="empty-products" id="empty-products" hidden>ไม่เจอสินค้าที่ค้นหา ลองเปลี่ยนคำหรือเลือกหมวดหมู่อื่นดูนะ ♡</p>
     </section>
-    <section class="booking-banner"><img src="https://images.unsplash.com/photo-1519823551278-64ac92734fb1?auto=format&fit=crop&w=1900&q=80" alt="" aria-hidden="true"><div class="booking-banner-overlay"></div><div><span class="eyebrow light">YOUR TIME, YOUR WAY</span><h2>ให้วันนี้เป็นวันของคุณ</h2><p>เลือกบริการและเวลาที่สะดวก แล้วเราจะเตรียมช่วงเวลาพักผ่อนที่ดีที่สุดไว้ให้</p><a class="button button-gold" href="{{ route('booking.create') }}">จองคิวเลย <span>↗</span></a></div></section>
-</main>
-<footer id="contact"><div class="footer-main section-wrap"><div class="footer-brand"><a class="logo" href="{{ route('home') }}"><span class="logo-symbol">R</span><span>RELAX<small>MASSAGE &amp; SPA</small></span></a><p>คืนสมดุลให้กายและใจ<br>ด้วยช่วงเวลาที่เป็นของคุณ</p></div><div><span class="footer-label">สำรวจ</span><a href="{{ route('home') }}">หน้าแรก</a><a href="#services">บริการของเรา</a><a href="#about">เกี่ยวกับเรา</a></div><div><span class="footer-label">สำหรับคุณ</span><a href="{{ route('booking.create') }}">จองคิว</a>@auth<a href="{{ route('bookings.mine') }}">ประวัติการจอง</a>@else<a href="{{ route('login') }}">เข้าสู่ระบบ</a>@endauth</div><div><span class="footer-label">ติดต่อเรา</span><p>โทร. 02-555-0100</p><p>Line: @relaxmassage</p><p>เปิดทุกวัน 09:00–18:00 น.</p></div></div><div class="footer-bottom section-wrap"><span>© {{ date('Y') }} Relax Massage &amp; Spa</span><span>THOUGHTFULLY MADE FOR YOUR WELLBEING</span></div></footer>
-<script src="{{ asset('js/relax.js') }}"></script>
-</body></html>
+
+    <section class="shop-promise" id="about">
+        <span class="promise-bubble">💌</span>
+        <div><span class="section-kicker">A LITTLE NOTE FROM US</span><h2>เติมความคิ้วต์<br>ให้ทุกวันพิเศษ ♡</h2><p>ไม่ว่าจะเป็นเสียงเพลง ธีมสุดละมุน<br>หรือสติกเกอร์ตัวโปรด เรารวมความน่ารักไว้ให้คุณแล้วที่ Kawaii Corner</p></div>
+        <a href="#products" class="shop-button shop-button-light">ค้นพบไอเทมชิ้นโปรด <span>↗</span></a>
+        <span class="promise-doodle">♡</span>
+    </section>
+
+    <dialog class="cart-dialog" id="cart-dialog" aria-labelledby="cart-title">
+        <div class="cart-panel">
+            <div class="cart-heading"><div><span class="section-kicker">YOUR LITTLE TREATS</span><h2 id="cart-title">ตะกร้าของคุณ <span>♡</span></h2></div><button class="cart-close" type="button" data-cart-close aria-label="ปิดตะกร้า">×</button></div>
+            <div class="cart-items" data-cart-items></div>
+            <div class="cart-empty" data-cart-empty><span>🛍️</span><strong>ยังไม่มีไอเทมชิ้นโปรดเลย!</strong><p>มาเลือกเมโลดี้ ธีม LINE และสติกเกอร์สุดคิวต์ เติมความน่ารักลงในตะกร้าของคุณกันเถอะ ♡</p><button type="button" class="shop-button shop-button-soft" data-cart-close>ไปช็อปความน่ารักกัน</button></div>
+            <div class="cart-summary"><span>รวมทั้งหมด</span><strong data-cart-total>฿0</strong></div>
+            @auth
+                <form action="{{ route('orders.store') }}" method="POST" id="checkout-form">
+                    @csrf
+                    <div data-cart-inputs></div>
+                    <button class="shop-button shop-button-primary checkout-button" type="submit" data-checkout>เลือกสินค้าก่อนสั่งซื้อ <span>♡</span></button>
+                </form>
+            @else
+                <a class="shop-button shop-button-primary checkout-button" href="{{ route('login') }}">เข้าสู่ระบบเพื่อสั่งซื้อ <span>↗</span></a>
+            @endauth
+            <p class="cart-footnote">ขอบคุณที่แวะมาเติมความสุขเล็กๆ ไปกับเรา</p>
+        </div>
+    </dialog>
+@endsection

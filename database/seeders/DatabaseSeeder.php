@@ -45,10 +45,19 @@ class DatabaseSeeder extends Seeder
                 'price' => 600,
                 'image_path' => 'https://images.unsplash.com/photo-1600334129128-685c5582fd35?auto=format&fit=crop&w=1000&q=85',
             ],
+            [
+                'name' => 'นวดหินร้อน',
+                'description' => 'ผ่อนคลายกล้ามเนื้ออย่างล้ำลึกด้วยหินร้อนที่ช่วยคลายความตึงเครียด พร้อมเติมสมดุลให้ร่างกาย',
+                'duration_minutes' => 90,
+                'price' => 700,
+                'image_path' => 'https://images.unsplash.com/photo-1600334129128-685c5582fd35?auto=format&fit=crop&w=1000&q=85',
+            ],
         ];
 
         foreach ($services as $service) {
             MassageService::updateOrCreate(['name' => $service['name']], $service + ['is_active' => true]);
         }
+
+        $this->call(StoreCatalogSeeder::class);
     }
 }

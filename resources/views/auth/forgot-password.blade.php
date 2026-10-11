@@ -28,7 +28,7 @@
             </div>
 
             <div class="mt-6">
-                <button type="submit" class="inline-flex w-full items-center justify-center rounded-xl bg-gradient-to-r from-amber-700 to-yellow-700 px-4 py-3 text-sm font-semibold text-white shadow-md shadow-amber-200 transition hover:-translate-y-0.5 hover:from-amber-800 hover:to-yellow-800 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2">
+                <button type="submit" class="inline-flex w-full items-center justify-center rounded-xl bg-gradient-to-r from-pink-500 to-fuchsia-500 px-4 py-3 text-sm font-semibold text-white shadow-md shadow-pink-200 transition hover:-translate-y-0.5 hover:from-pink-600 hover:to-fuchsia-600 focus:outline-none focus:ring-2 focus:ring-pink-400 focus:ring-offset-2">
                     ส่งลิงก์ตั้งรหัสผ่านใหม่
                 </button>
             </div>
@@ -36,7 +36,7 @@
 
         <p class="mt-6 text-center text-sm text-gray-600">
             จำรหัสผ่านได้แล้ว?
-            <a class="font-semibold text-amber-700 hover:text-amber-900" href="{{ route('login') }}">กลับไปเข้าสู่ระบบ</a>
+            <a class="font-semibold text-pink-600 hover:text-pink-800" href="{{ route('login') }}">กลับไปเข้าสู่ระบบ</a>
         </p>
     </x-authentication-card>
 </x-guest-layout>

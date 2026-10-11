@@ -1,1 +1,1 @@
-<span {{ $attributes->merge(['class' => 'font-serif text-lg font-semibold tracking-[0.2em] text-stone-700']) }}>RELAX</span>
+<span {{ $attributes->merge(['class' => 'text-lg font-bold tracking-tight text-pink-700']) }}>KAWAII CORNER</span>

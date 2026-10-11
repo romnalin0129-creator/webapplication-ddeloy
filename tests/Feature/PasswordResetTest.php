@@ -13,6 +13,12 @@ class PasswordResetTest extends TestCase
 {
     use RefreshDatabase;
 
+    public function test_mail_has_a_sender_address_when_none_is_configured(): void
+    {
+        $this->assertNotEmpty(config('mail.from.address'));
+        $this->assertNotEmpty(config('mail.from.name'));
+    }
+
     public function test_reset_password_link_screen_can_be_rendered(): void
     {
         if (! Features::enabled(Features::resetPasswords())) {

@@ -44,24 +44,68 @@ class MassageBookingTest extends TestCase
         ]);
     }
 
-    public function test_home_page_displays_database_services_and_their_prices(): void
+    public function test_home_page_displays_the_storefront_and_account_links(): void
     {
-        $service = $this->service();
+        $this->seed(\Database\Seeders\StoreCatalogSeeder::class);
 
         $this->get(route('home'))
             ->assertOk()
-            ->assertSee('Relax Massage')
-            ->assertSee('ผ่อนคลายทุกสัมผัส')
-            ->assertSee($service->name)
-            ->assertSee('฿300')
-            ->assertSee('60 นาที')
-            ->assertSee('ค้นหารอบว่างของคุณ')
-            ->assertSee('A SIMPLE RITUAL')
-            ->assertSee('คำถามที่พบบ่อย')
-            ->assertSee('home-availability')
+            ->assertSee('Kawaii Corner')
+            ->assertSee('เมโลดี้ไลน์')
+            ->assertSee(collect(config('store_catalog.products'))->firstWhere('id', 'melody-cat')['name'])
+            ->assertSee('data-cart-open', false)
             ->assertSee(route('login'))
             ->assertSee(route('register'))
             ->assertSee(route('password.request'));
+    }
+
+    public function test_services_page_lists_database_services_including_neck_shoulder_and_foot_massage(): void
+    {
+        $this->service([
+            'name' => 'นวดคอบ่าไหล่',
+            'duration_minutes' => 30,
+            'price' => 200,
+        ]);
+        $this->service([
+            'name' => 'นวดฝ่าเท้า',
+            'duration_minutes' => 60,
+            'price' => 250,
+        ]);
+
+        $this->get(route('storefront.services'))
+            ->assertOk()
+            ->assertSee('บริการของเรา')
+            ->assertSee('นวดคอบ่าไหล่')
+            ->assertSee('นวดฝ่าเท้า')
+            ->assertSee(route('booking.create', ['service' => MassageService::where('name', 'นวดคอบ่าไหล่')->value('id')]));
+    }
+
+    public function test_about_and_contact_navigation_open_separate_storefront_pages(): void
+    {
+        $this->get(route('storefront.about'))
+            ->assertOk()
+            ->assertSee('เกี่ยวกับเรา')
+            ->assertSee('คำถามที่พบบ่อย')
+            ->assertSee(route('storefront.contact'));
+
+        $this->get(route('storefront.contact'))
+            ->assertOk()
+            ->assertSee('ติดต่อเรา')
+            ->assertSee('02-555-0100')
+            ->assertSee('tel:025550100', false)
+            ->assertSee(route('storefront.services'));
+    }
+
+    public function test_homepage_displays_the_seeded_store_catalog(): void
+    {
+        $this->seed(\Database\Seeders\StoreCatalogSeeder::class);
+        $products = collect(config('store_catalog.products'))->keyBy('id');
+
+        $this->get(route('home'))
+            ->assertOk()
+            ->assertSee($products['melody-morning']['name'])
+            ->assertSee($products['theme-rabbit']['name'])
+            ->assertSee($products['sticker-mini']['name']);
     }
 
     public function test_homepage_shows_logout_and_booking_history_for_signed_in_members(): void
@@ -70,7 +114,7 @@ class MassageBookingTest extends TestCase
             ->get(route('home'))
             ->assertOk()
             ->assertSee(route('logout'))
-            ->assertSee(route('bookings.mine'))
+            ->assertSee(route('orders.index'))
             ->assertDontSee(route('register'));
     }
 
@@ -344,16 +388,18 @@ class MassageBookingTest extends TestCase
         $this->assertDatabaseHas('bookings', ['id' => $booking->id, 'status' => 'completed', 'slot_key' => null]);
     }
 
-    public function test_service_seeder_creates_the_five_requested_treatments_idempotently(): void
+    public function test_service_seeder_creates_six_requested_treatments_idempotently(): void
     {
         $this->seed(\Database\Seeders\DatabaseSeeder::class);
-        $this->assertDatabaseCount('services', 5);
+        $this->assertDatabaseCount('services', 6);
         $this->assertDatabaseHas('services', ['name' => 'นวดแผนไทย', 'duration_minutes' => 60, 'price' => 300]);
         $this->assertDatabaseHas('services', ['name' => 'นวดน้ำมันอโรม่า', 'duration_minutes' => 60, 'price' => 500]);
         $this->assertDatabaseHas('services', ['name' => 'นวดฝ่าเท้า', 'duration_minutes' => 60, 'price' => 250]);
         $this->assertDatabaseHas('services', ['name' => 'นวดคอบ่าไหล่', 'duration_minutes' => 30, 'price' => 200]);
         $this->assertDatabaseHas('services', ['name' => 'นวดประคบสมุนไพร', 'duration_minutes' => 90, 'price' => 600]);
+        $this->assertDatabaseHas('services', ['name' => 'นวดหินร้อน', 'duration_minutes' => 90, 'price' => 700]);
+        $this->get(route('storefront.services'))->assertOk()->assertSee('นวดหินร้อน')->assertSee('฿700');
         $this->seed(\Database\Seeders\DatabaseSeeder::class);
-        $this->assertDatabaseCount('services', 5);
+        $this->assertDatabaseCount('services', 6);
     }
 }

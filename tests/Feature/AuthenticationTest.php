@@ -18,16 +18,13 @@ class AuthenticationTest extends TestCase
         $response->assertStatus(200)
             ->assertSee('เข้าสู่ระบบ')
             ->assertSee('ลืมรหัสผ่าน?')
-            ->assertSee('Relax Massage');
+            ->assertSee('Kawaii Corner');
     }
 
-    public function test_root_entry_renders_login_for_guests_and_storefront_for_members(): void
+    public function test_root_entry_redirects_to_the_storefront_for_guests_and_members(): void
     {
         $this->get('/')
-            ->assertOk()
-            ->assertSee('เข้าสู่ระบบ')
-            ->assertSee(route('register'))
-            ->assertSee(route('password.request'));
+            ->assertRedirect(route('home'));
 
         $this->actingAs(User::factory()->create())
             ->get('/')

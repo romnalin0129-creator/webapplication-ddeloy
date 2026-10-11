@@ -7,15 +7,15 @@
 
         <title>
             @if (request()->routeIs('login', 'welcome'))
-                Relax Massage &amp; Spa — เข้าสู่ระบบ
+                Kawaii Corner — เข้าสู่ระบบ
             @elseif (request()->routeIs('register'))
-                Relax Massage &amp; Spa — สมัครสมาชิก
+                Kawaii Corner — สมัครสมาชิก
             @elseif (request()->routeIs('password.request'))
-                Relax Massage &amp; Spa — ลืมรหัสผ่าน
+                Kawaii Corner — ลืมรหัสผ่าน
             @elseif (request()->routeIs('password.reset'))
-                Relax Massage &amp; Spa — ตั้งรหัสผ่านใหม่
+                Kawaii Corner — ตั้งรหัสผ่านใหม่
             @else
-                Relax Massage &amp; Spa — บัญชีผู้ใช้
+                Kawaii Corner — บัญชีผู้ใช้
             @endif
         </title>
 

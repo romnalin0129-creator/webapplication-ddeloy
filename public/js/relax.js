@@ -1,7 +1,23 @@
 document.addEventListener('DOMContentLoaded', () => {
     const toggle = document.querySelector('.menu-toggle');
     const navigation = document.querySelector('.navigation');
-    toggle?.addEventListener('click', () => navigation.classList.toggle('open'));
+    toggle?.addEventListener('click', () => {
+        const isOpen = navigation.classList.toggle('open');
+        toggle.setAttribute('aria-expanded', String(isOpen));
+    });
+    navigation?.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', () => {
+            navigation.classList.remove('open');
+            toggle?.setAttribute('aria-expanded', 'false');
+        });
+    });
+    document.addEventListener('keydown', event => {
+        if (event.key === 'Escape' && navigation?.classList.contains('open')) {
+            navigation.classList.remove('open');
+            toggle?.setAttribute('aria-expanded', 'false');
+            toggle?.focus();
+        }
+    });
 
     const revealElements = document.querySelectorAll(
         '.hero-copy, .intro, .availability-section, .section-title, .service-card, .ritual-image, .ritual-copy, .booking-steps, .faq-section, .booking-banner > div:last-child'

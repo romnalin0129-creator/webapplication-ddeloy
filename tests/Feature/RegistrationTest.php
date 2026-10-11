@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\User;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Fortify\Features;
@@ -25,7 +26,7 @@ class RegistrationTest extends TestCase
         $response->assertStatus(200)
             ->assertSee('สร้างบัญชีใหม่')
             ->assertSee('ยืนยันรหัสผ่าน')
-            ->assertSee('Relax Massage');
+            ->assertSee('Kawaii Corner');
     }
 
     public function test_registration_screen_cannot_be_rendered_if_support_is_disabled(): void
@@ -59,5 +60,30 @@ class RegistrationTest extends TestCase
 
         $this->assertAuthenticated();
         $response->assertRedirect(RouteServiceProvider::HOME);
+    }
+
+    public function test_registration_rejects_an_existing_email_without_an_extra_notice(): void
+    {
+        if (! Features::enabled(Features::registration())) {
+            $this->markTestSkipped('Registration support is not enabled.');
+
+            return;
+        }
+
+        User::factory()->create(['email' => 'existing@example.com']);
+
+        $response = $this->from('/register')->post('/register', [
+            'name' => 'Test User',
+            'email' => 'existing@example.com',
+            'password' => 'new-password',
+            'password_confirmation' => 'new-password',
+            'terms' => Jetstream::hasTermsAndPrivacyPolicyFeature(),
+        ]);
+
+        $response->assertRedirect('/register')
+            ->assertSessionHasErrors('email');
+        $this->get('/register')->assertDontSee('ถ้าคุณเคยสมัครด้วยอีเมลนี้แล้ว');
+
+        $this->assertGuest();
     }
 }
